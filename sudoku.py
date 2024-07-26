@@ -1,6 +1,7 @@
 from collections import deque
 
-
+## First Time // Not the complete Code 
+##
 def domains(board):
     h1 = {}
     for row in range(9):
