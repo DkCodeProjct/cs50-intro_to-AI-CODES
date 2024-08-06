@@ -30,10 +30,21 @@
   -  int(row['TrafficType']),
   -  1 if row['VisitorType'] == 'Returning_Visitor' else 0,
 
-    * i knew this 1 if .. else 0 syntax but i was naive to apply finaly done it...
+    * i knew this 1 if .. else 0 syntax but i was naive to apply finaly done it...!
+
 
 ### Func def evaluate(labels, predictions):
 
   * this func tell how well our model performe `identifying positive and negative cases`.
 
+#### sensitivity, specificity | 
+  *   |[Sensitivity]:
+        + refers to the p`roportion of positive examples that were correctly identified` in other words, the proportion          of users` who did go through with a purchase` who were correctly identified. 
+    
+   
+
+        + refers to the proportion of `negative examples that were correctly identified` in this case, the proportion of         users `who did not go through with a purchase` who were correctly identifi
+
++ how to calculate sensitivity/specifity:
+ |[Specificity]:![Screenshot 2024-08-06 at 12-19-25 Confusion Matrix Explained](https://github.com/user-attachments/assets/9704ea3f-a15e-433c-8725-647d84c3e046)
   
