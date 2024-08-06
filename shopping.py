@@ -65,84 +65,125 @@ def load_data(filename):
         reader = csv.DictReader(file)
         for row in reader:
             
-            row['Administrative'] = int(row['Administrative'])
-            row['Informational'] = int(row['Informational'])
-            row['ProductRelated'] = int(row['ProductRelated'])
+            # float data  --->
+            adminDuration = float(row['Administrative_Duration'])
+            infoDuration = float(row['Informational_Duration'])
+            productDuration = float(row['ProductRelated_Duration'])
+            bounceRate = float(row['BounceRates'])
+            exitRate = float(row['ExitRates'])
+            pageVal = float(row['PageValues'])
+            specialDay = float(row['SpecialDay'])
+
+
+            # int Data  --->
+            admin = int(row['Administrative'])
+            info = int(row['Informational'])
+            productRel = int(row['ProductRelated'])
+
 
             if row['Month'] == 'Jan':
-                row['Month'] = 0
+                month = 0
             
             elif row['Month'] == 'Feb':
-                row['Month'] = 1
+                month = 1
             
             elif row['Month'] == 'Mar':
-                row['Month'] = 2
+                month = 2
             
             elif row['Month'] == 'Apr':
-                row['Month'] = 3
+                month = 3
             
             elif row['Month'] == 'May':
-                row['Month'] = 4
+                month = 4
             
             elif row['Month'] == 'Jun':
-                row['Month'] = 5
+                month = 5
             
             elif row['Month'] == 'Jul':
-                row['Month'] = 6
+                month = 6
             
             elif row['Month'] == 'Aug':
-                row['Month'] = 7
+                month = 7
             
             elif row['Month'] == 'Sep':
-                row['Month'] = 8
+                month = 8
             
             elif row['Month'] == 'Oct':
-                row['Month'] = 9
+                month = 9
             
             elif row['Month'] == 'Nov':
-                row['Month'] = 10
+                month = 10
             
             elif row['Month'] == 'Dec':
-                row['Month'] = 11
+                month = 11
             
-            row['OperatingSystems'] = int(row['OperatingSystems'])
-            row['Browser'] = int(row['Browser'])
-            row['Region'] = int(row['Region'])
-            row['TrafficType'] = int(row['TrafficType'])
+            os = int(row['OperatingSystems'])
+            brwsor = int(row['Browser'])
+            region = int(row['Region'])
+            traficType = int(row['TrafficType'])
             
             if row['VisitorType'] == 'Returning_Visitor':
-                row['VisitorType'] = 1
+                visitor = 1
             
             elif row['VisitorType'] == 'New_Visitor':
-                row['VisitorType'] = 0
+                visitor = 0
             
+            
+            # init var[weekend] with default val cos unboubndLocalEror
+            weekend = None
             if row['Weekend'] == 'True':
-                row['Weekend'] = 1
+                weekend = 1
             
             elif row['Weekend'] == 'False':
-                row['Weekend'] = 0
-            
+                weekend = 0
 
-            
+            # list of evidence
+            evidence = [
+                #float Data
+                adminDuration,
+                infoDuration,
+                productDuration,
+                bounceRate,
+                exitRate,
+                pageVal,
+                specialDay,
+
+                #int Data
+                admin,
+                info,
+                productRel,
+                month,
+                os,
+                traficType,
+                brwsor,
+                region,
+                visitor,
+                weekend,
+
+            ]
+            intEvidenceData.append(evidence)
+           
+            # init var[label] with defaualt val cos unboubndLocalEror
+            label = None
             if row['Revenue'] == 'True':
                 label = 1
             elif row['Revenue'] == 'False':
                 label = 0
+            
             intLabelData.append(label)
         
         return intEvidenceData, intLabelData
-    
-    
+
 
 def train_model(evidence, labels):
     """
     Given a list of evidence lists and a list of labels, return a
     fitted k-nearest neighbor model (k=1) trained on the data.
     """
-    # kneighbor
     model = KNeighborsClassifier(n_neighbors=1)
     model.fit(evidence, labels)
-
+    
+    return model
 
 def evaluate(labels, predictions):
     """
@@ -159,7 +200,26 @@ def evaluate(labels, predictions):
     representing the "true negative rate": the proportion of
     actual negative labels that were accurately identified.
     """
-    raise NotImplementedError
+    
+    truePositiv = 0
+    trueNegativ = 0
+    falsePositiv = 0
+    falseNegativ = 0
+
+    for trueLable, predictlable in zip(labels, predictions):
+        if trueLable == 1 and predictlable == 1:
+            truePositiv += 1
+        elif trueLable == 1 and predictlable == 0:
+            falseNegativ += 1
+        elif trueLable == 0 and predictlable == 1:
+            falsePositiv += 1
+        elif trueLable == 0 and predictlable == 0:
+            trueNegativ += 1
+    
+    sensivity = truePositiv / (truePositiv + falseNegativ)
+    specifity = trueNegativ / (trueNegativ + falsePositiv)
+
+    return sensivity, specifity
 
 
 if __name__ == "__main__":
